@@ -3,6 +3,19 @@ const readline = require('readline').createInterface({
 	output: process.stdout
 });
 
+const today = new Date();
+const day = today.getDate();
+if (today.getMonth() == 11) {
+	try {
+		require(`./solutions/${day}.js`);
+		console.log();
+	} catch (error) {
+		if (error.code !== 'MODULE_NOT_FOUND') {
+			throw error;
+		}
+	}
+}
+
 // prompt for puzzle to run
 readline.question('Enter a number between 1-31 to run (or leave blank to run today\'s solution)', (input) => {
 	let puzzle = 0;
@@ -14,9 +27,8 @@ readline.question('Enter a number between 1-31 to run (or leave blank to run tod
 			process.exit(1);
 		}
 	} else { // run today's date
-		var today = new Date();
 		if (today.getMonth() == 11) {
-			puzzle = today.getDate();
+			puzzle = day;
 		} else {
 			console.error('Advent of Code only runs in December. Please provide a number between 1-31.');
 			process.exit(1);
