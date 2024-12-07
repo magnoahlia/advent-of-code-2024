@@ -3,11 +3,23 @@ const readline = require('readline').createInterface({
 	output: process.stdout
 });
 
+function exec(solution) {
+	const script = `./solutions/${solution}.js`;
+	const label = `Day ${solution} execution time`;
+
+	console.time(label);
+	require(script);
+	console.timeEnd(label)
+
+	// this allows the same day's module to be run more than once from require()
+	delete require.cache[require.resolve(script)];
+}
+
 const today = new Date();
 const day = today.getDate();
 if (today.getMonth() == 11) {
 	try {
-		require(`./solutions/${day}.js`);
+		exec(day);
 		console.log();
 	} catch (error) {
 		if (error.code !== 'MODULE_NOT_FOUND') {
@@ -16,36 +28,38 @@ if (today.getMonth() == 11) {
 	}
 }
 
-// prompt for puzzle to run
-readline.question('Enter a number between 1-31 to run (or leave blank to run today\'s solution)', (input) => {
-	let puzzle = 0;
+function prompt() {
+	// prompt for puzzle to run
+	readline.question('Enter a number between 1-31 to run (or leave blank to run today\'s solution)', (input) => {
+		let puzzle = 0;
 
-	if (input) { // run a specific date
-		puzzle = parseInt(input);
-		if (Number.isNaN(puzzle)) {
-			console.error(`Expected number between 1-31, got ${input}.`);
-			process.exit(1);
+		if (input) { // run a specific date
+			puzzle = parseInt(input);
+			if (Number.isNaN(puzzle)) {
+				console.error(`Expected number between 1-31, got ${input}.`);
+			}
+		} else { // run today's date
+			if (today.getMonth() == 11) {
+				puzzle = day;
+			} else {
+				console.error('Advent of Code only runs in December. Please provide a number between 1-31.');
+			}
 		}
-	} else { // run today's date
-		if (today.getMonth() == 11) {
-			puzzle = day;
-		} else {
-			console.error('Advent of Code only runs in December. Please provide a number between 1-31.');
-			process.exit(1);
-		}
-	}
 
-	// try to run the puzzle
-	try {
-		require(`./solutions/${puzzle}.js`);
-	} catch (error) {
-		if (error.code == 'MODULE_NOT_FOUND') {
-			console.log(`No solution yet for ${puzzle}`);
-			process.exit(1);
-		} else {
-			throw error;
+		// try to run the puzzle
+		try {
+			exec(puzzle);
+		} catch (error) {
+			if (error.code == 'MODULE_NOT_FOUND') {
+				console.log(`No solution yet for ${puzzle}`);
+			} else {
+				throw error;
+			}
 		}
-	}
 
-	readline.close();
-});
+		console.log();
+		prompt();
+	});
+}
+
+prompt();
