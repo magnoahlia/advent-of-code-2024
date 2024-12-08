@@ -18,14 +18,8 @@ function exec(solution) {
 const today = new Date();
 const day = today.getDate();
 if (today.getMonth() == 11) {
-	try {
-		exec(day);
-		console.log();
-	} catch (error) {
-		if (error.code !== 'MODULE_NOT_FOUND') {
-			throw error;
-		}
-	}
+	exec(day);
+	console.log();
 }
 
 function prompt() {
@@ -50,11 +44,7 @@ function prompt() {
 		try {
 			exec(puzzle);
 		} catch (error) {
-			if (error.code == 'MODULE_NOT_FOUND') {
-				console.log(`No solution yet for ${puzzle}`);
-			} else {
-				throw error;
-			}
+			throw error;
 		}
 
 		console.log();
