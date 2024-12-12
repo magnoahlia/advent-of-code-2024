@@ -1,6 +1,6 @@
 {
   "watch": ["."],
-  "ext": ".js",
+  "ext": ".js,.txt",
   "ignore": [],
   "exec": "node index.js"
 }
