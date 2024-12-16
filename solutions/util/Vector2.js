@@ -20,6 +20,14 @@ class Vector2 {
 		return v.x === this.x && v.y === this.y;
 	}
 
+	abs() {
+		return new Vector2(Math.abs(this.x), Math.abs(this.y));
+	}
+
+	flipped() {
+		return new Vector2(this.y, this.x);
+	}
+
 	toString() {
 		return `(${this.x}, ${this.y})`;
 	}
